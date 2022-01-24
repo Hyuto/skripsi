@@ -1,6 +1,8 @@
 import argparse, os
-import logging, json
+import logging
+import csv, json
 from scraper import TwitterScraper
+from utils import get_name, make_dir
 from subprocess import Popen, PIPE
 from datetime import datetime
 
@@ -8,25 +10,20 @@ from datetime import datetime
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
-def get_name(path):
-    filename, extension = os.path.splitext(path)
-
-    if not os.path.isfile(path):
-        return path
-    else:
-        index = 1
-        while True:
-            new_name = f"{filename} ({index}){extension}"
-
-            if not os.path.isfile(new_name):
-                return new_name
-            else:
-                index += 1
-
-
 class NewScraper(TwitterScraper):
-    def scrape(self, export):
+    def scrape(self, export, filter=["date", "content", "url"]):
         command = self._get_command()
+
+        if export:
+            logging.info("Exporting to './output' directory")
+            path = "./output"
+            make_dir(path)
+            name = get_name(os.path.join(path, f"test-{datetime.now().strftime('%d-%b-%Y')}.csv"))
+            f = open(name, "w", encoding="utf-8")
+            writer = csv.writer(f)
+            writer.writerow(filter)
+
+        logging.info("Scraping...")
         with Popen(command, stdout=PIPE) as p:
             for out in p.stdout:
                 temp = json.loads(out)
@@ -35,12 +32,12 @@ class NewScraper(TwitterScraper):
                 )
                 print(f"{temp['date']} - {content}")
 
+                if export:
+                    writer.writerow([temp[x] for x in filter])
+
         if export:
-            logging.info("Exporting to './output' directory")
-            path = "./output"
-            if not os.path.isdir(path):
-                os.mkdir(path)
-            name = get_name(os.path.join(path, f"crawl-{datetime.now().strftime('%d-%b-%Y')}.csv"))
+            logging.info(f"Successfully Exported to {name}")
+            f.close()
 
         logging.info("Done!")
 
