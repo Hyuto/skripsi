@@ -56,7 +56,7 @@ class TwitterScraper:
             writer.writerow(filter)
 
         logging.info("Scraping...")
-        with Popen(command, stdout=PIPE) as p:
+        with Popen(command, stdout=PIPE, shell=True) as p:
             index = 1
             for out in p.stdout:
                 temp = json.loads(out)

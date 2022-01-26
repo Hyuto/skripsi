@@ -19,9 +19,10 @@ Implementasi model yang telah di latih.
 
 ## [Dataset](.data)
 
-Dataset adalah data hasil web scraping twitter pada topik `vaksin covid` pada tahun 2021 selama 12
-bulan. Library yang digunakan untuk melakukan scraping adalah [`snscrape`](https://github.com/JustAnotherArchivist/snscrape).
-Data dapat diakses langsung secara online dengan format link berikut:
+Dataset adalah data hasil web scraping twitter pada topik `vaksin covid-19` pada tahun 2021 selama 12
+bulan. Library yang digunakan untuk melakukan scraping adalah [`snscrape`](https://github.com/JustAnotherArchivist/snscrape)
+dengan query yang digunakan untuk pencarian adalah `vaksin (covid OR corona)`. Data dapat diakses
+langsung secara online dengan format link berikut:
 
 ```
 https://raw.githubusercontent.com/Hyuto/skripsi/master/data/<NAMA FILE>
