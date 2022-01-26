@@ -31,7 +31,12 @@ class TwitterScraper:
             global_options.append(f"--max-results {self.max_result}")
         global_options = " ".join(global_options)
 
-        scrapper_options = [self.query, f"lang:{self.lang}"]
+        scrapper_options = [
+            self.query,
+            f"lang:{self.lang}",
+            "exclude:nativeretweets",
+            "exclude:retweets",
+        ]
         if self.until:
             scrapper_options.append(f"until:{self.until}")
         scrapper_options = " ".join(scrapper_options)
@@ -42,8 +47,8 @@ class TwitterScraper:
         command = self._get_command()
 
         if export:
-            logging.info("Exporting to './output' directory")
-            path = "./output"
+            path = os.path.join(".", "output")
+            logging.info(f"Exporting to '{path}' directory")
             make_dir(path)
             name = get_name(os.path.join(path, f"scrape-{datetime.now().strftime('%d-%b-%Y')}.csv"))
             f = open(name, "w", encoding="utf-8")
@@ -83,7 +88,7 @@ def main():
     args = parser.parse_args()
     logging.info("Starting script with params:")
     for arg, value in vars(args).items():
-        print(f"   * {arg.title()}  : {value}")
+        print(f"   * {arg}  : {value}")
 
     scraper = TwitterScraper(args.query, args.lang, args.max_results, args.since, args.until)
     scraper.scrape(args.export)
