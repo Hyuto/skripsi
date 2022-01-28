@@ -78,7 +78,7 @@ class TwitterScraper:
 
 def main():
     parser = argparse.ArgumentParser(description="Scrapping Twitter Data")
-    parser.add_argument("-q", "--query", help="Search query", type=str, default="vaksin covid")
+    parser.add_argument("-q", "--query", help="Search query", type=str)
     parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)
     parser.add_argument("-L", "--lang", help="Language", type=str, default="id")
     parser.add_argument("-S", "--since", help="Since", type=str)
