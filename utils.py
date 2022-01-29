@@ -15,8 +15,3 @@ def get_name(path):
                 return new_name
             else:
                 index += 1
-
-
-def make_dir(path):
-    if not os.path.isdir(path):
-        os.mkdir(path)

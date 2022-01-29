@@ -1,17 +1,16 @@
 # Project Skripsi
 
 ![love](https://img.shields.io/badge/Made%20with-🖤-white)
-[![Python](https://img.shields.io/badge/Python%203-white?logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python%203-green?logo=python)](https://www.python.org/)
 
 Main repository untuk project skripsi.
 
 ## To Do's
 
-1. Sampling data
-2. Labelling data
-3. Preprocess & Visualisasi
-4. Modelling dengan SVM
-5. Buat automated server
+1. Labelling data
+2. Preprocess & Visualisasi
+3. Modelling dengan SVM
+4. Buat automated server
 
 ## [App](https://github.com/Hyuto/skripsi-app)
 

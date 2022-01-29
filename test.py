@@ -2,7 +2,7 @@ import argparse, os
 import logging
 import csv, json
 from scraper import TwitterScraper
-from utils import get_name, make_dir
+from utils import get_name
 from subprocess import Popen, PIPE
 from datetime import datetime
 
@@ -17,7 +17,7 @@ class NewScraper(TwitterScraper):
         if export:
             path = os.path.join(".", "output")
             logging.info(f"Exporting to '{path}' directory")
-            make_dir(path)
+            os.makedirs(path, exist_ok=True)
             name = get_name(os.path.join(path, f"test-{datetime.now().strftime('%d-%b-%Y')}.csv"))
             f = open(name, "w", encoding="utf-8")
             writer = csv.writer(f)
