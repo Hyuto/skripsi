@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+format = "black ./scripts"
+isort = "isort ./scripts"
+lint = "flake8 ./scripts"
+notebook = "jupyter notebook"
+
+[packages]
+numpy = "*"
+pandas = "*"
+matplotlib = "*"
+seaborn = "*"
+scikit-learn = "*"
+snscrape = "*"
+
+[dev-packages]
+black = "*"
+isort = "*"
+notebook = "*"
+flake8 = "*"
+xonsh = {extras = ["full"], version = "*"}
+
+[requires]
+python_version = "3.8"

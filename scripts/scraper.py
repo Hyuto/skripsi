@@ -1,9 +1,12 @@
-import argparse, os
+import argparse
+import csv
+import json
 import logging
-import json, csv
-from utils import get_name
-from subprocess import Popen, PIPE
+import os
 from datetime import datetime
+from subprocess import PIPE, Popen
+
+from utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
@@ -47,7 +50,7 @@ class TwitterScraper:
         command = self._get_command()
 
         if export:
-            path = os.path.join(".", "output")
+            path = os.path.join("..", "output")
             logging.info(f"Exporting to '{path}' directory")
             os.makedirs(path, exist_ok=True)
             name = get_name(os.path.join(path, f"scrape-{datetime.now().strftime('%d-%b-%Y')}.csv"))
