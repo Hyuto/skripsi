@@ -16,13 +16,14 @@ matplotlib = "*"
 seaborn = "*"
 scikit-learn = "*"
 snscrape = "*"
+onnxruntime = "*"
+pytest = "*"
 
 [dev-packages]
 black = "*"
 isort = "*"
 notebook = "*"
 flake8 = "*"
-xonsh = {extras = ["full"], version = "*"}
 
 [requires]
 python_version = "3.8"
