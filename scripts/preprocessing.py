@@ -55,17 +55,28 @@ def replace_slang(text: str, dictionary: Dict[str, str] = SLANG_DICT) -> str:
     Returns:
         str: text after
     """
-    pattern = re.compile("(%s)" % "|".join(map(lambda x: f"\\b{x}\\b", dictionary.keys())))
+    pattern = re.compile("(%s)" % "|".join(map(lambda x: rf"\b{x}\b", dictionary.keys())))
     return pattern.sub(lambda mo: dictionary[mo.string[mo.start() : mo.end()]], text)
+
+
+def replace_word_elongation(text: str) -> str:
+    """Replace word elongation inside text
+
+    Args:
+        text (str): text/sentence
+
+    Returns:
+        str: text after
+    """
+    pattern = re.compile(r"\b\w*([a-z])(\1{1,})\w*\b")
+    return pattern.sub(
+        lambda mo: re.sub(r"(?i)([a-z])(\1{1,})", r"\1", mo.string[mo.start() : mo.end()]), text
+    )
 
 
 class TweetPreprocessing:
     def __init__(self, slang_words_dict: Dict[str, str] = SLANG_DICT) -> None:
-        self._slang_dict = slang_words_dict
-        self._slang_pattern = re.compile(
-            "(%s)" % "|".join(map(lambda x: f"\\b{x}\\b", slang_words_dict.keys()))
-        )
-        self.emoji_pattern = re.compile(
+        self._emoji_pattern = re.compile(
             pattern="["
             "\U0001F600-\U0001F64F"  # emoticons
             "\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -74,7 +85,12 @@ class TweetPreprocessing:
             "]+",
             flags=re.UNICODE,
         )
-        self.html_pattern = re.compile(r"<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
-        self.url_pattern = re.compile(
+        self._html_pattern = re.compile(r"<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
+        self._url_pattern = re.compile(
             r"(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*"
         )
+        self._slang_dict = slang_words_dict
+        self._slang_pattern = re.compile(
+            "(%s)" % "|".join(map(lambda x: rf"\b{x}\b", slang_words_dict.keys()))
+        )
+        self._we_pattern = re.compile(r"\b\w*([a-z])(\1{1,})\w*\b")
