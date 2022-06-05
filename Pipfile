@@ -18,6 +18,7 @@ scikit-learn = "*"
 snscrape = "*"
 onnxruntime = "*"
 pytest = "*"
+pysastrawi = "*"
 
 [dev-packages]
 black = "*"

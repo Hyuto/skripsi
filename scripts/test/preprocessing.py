@@ -1,4 +1,4 @@
-from ..preprocessing import replace_slang, remove_noise, replace_word_elongation
+from ..preprocessing import replace_slang, remove_noise, replace_word_elongation, normalize_text
 
 
 def test_replace_slang():
@@ -33,3 +33,11 @@ def test_replace_word_elongation():
     assert replace_word_elongation("kenapaaa?") == "kenapa?"
     assert replace_word_elongation("kenapaaaa?") == "kenapa?"
     assert replace_word_elongation("kenapaaaaa?") == "kenapa?"
+
+
+def test_normalize_text():
+    # TODO: Update test after updating stopwords
+    assert (
+        normalize_text("Perekonomian Indonesia sedang dalam pertumbuhan yang membanggakan")
+        == "ekonomi indonesia sedang dalam tumbuh yang bangga"
+    )

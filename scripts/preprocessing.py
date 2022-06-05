@@ -2,10 +2,13 @@ import os
 import json
 import re
 import string
-from typing import Dict
+from typing import Dict, Iterable
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 with open(os.path.join(os.path.dirname(__file__), "..", "kamus", "kata-gaul.json")) as f:
     SLANG_DICT = json.load(f)
+STOPWORDS = []  # TODO: Update stopwords
+STEMMER = StemmerFactory().create_stemmer()
 
 
 def remove_noise(text: str) -> str:
@@ -72,6 +75,24 @@ def replace_word_elongation(text: str) -> str:
     return pattern.sub(
         lambda mo: re.sub(r"(?i)([a-z])(\1{1,})", r"\1", mo.string[mo.start() : mo.end()]), text
     )
+
+
+def normalize_text(text: str, stopwords: Iterable[str] = STOPWORDS) -> str:
+    """Normalizing text
+    - remove stopwords
+    - stemming
+
+    Args:
+        text (str): text/sentence
+        stopwords (Iterable[str], optional): stopwords.
+
+    Returns:
+        str: text after
+    """
+    stopwords_pattern = re.compile("(%s)" % "|".join(map(lambda x: rf"\b{x}\b", stopwords)))
+    text = stopwords_pattern.sub("", text)
+    text = STEMMER.stem(text)
+    return " ".join(text.split())
 
 
 class TweetPreprocessing:
