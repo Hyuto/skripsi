@@ -19,6 +19,7 @@ snscrape = "*"
 onnxruntime = "*"
 pytest = "*"
 pysastrawi = "*"
+tqdm = "*"
 
 [dev-packages]
 black = "*"
