@@ -5,9 +5,11 @@ import string
 from typing import Dict, Iterable
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
-with open(os.path.join(os.path.dirname(__file__), "..", "kamus", "kata-gaul.json")) as f:
+KAMUS_DIR = os.path.join(os.path.dirname(__file__), "..", "kamus")
+with open(os.path.join(KAMUS_DIR, "kata-gaul.json")) as f:
     SLANG_DICT = json.load(f)
-STOPWORDS = []  # TODO: Update stopwords
+with open(os.path.join(KAMUS_DIR, "stopwords.json")) as f:
+    STOPWORDS = json.load(f)
 STEMMER = StemmerFactory().create_stemmer()
 
 
@@ -89,14 +91,18 @@ def normalize_text(text: str, stopwords: Iterable[str] = STOPWORDS) -> str:
     Returns:
         str: text after
     """
-    stopwords_pattern = re.compile("(%s)" % "|".join(map(lambda x: rf"\b{x}\b", stopwords)))
-    text = stopwords_pattern.sub("", text)
+    pattern = re.compile("(%s)" % "|".join(map(lambda x: rf"\b{x}\b", stopwords)))
+    text = pattern.sub("", text)
     text = STEMMER.stem(text)
     return " ".join(text.split())
 
 
 class TweetPreprocessing:
-    def __init__(self, slang_words_dict: Dict[str, str] = SLANG_DICT) -> None:
+    def __init__(
+        self,
+        slang_words_dict: Dict[str, str] = SLANG_DICT,
+        stopwords: Iterable[str] = STOPWORDS,
+    ):
         self._emoji_pattern = re.compile(
             pattern="["
             "\U0001F600-\U0001F64F"  # emoticons
@@ -115,3 +121,28 @@ class TweetPreprocessing:
             "(%s)" % "|".join(map(lambda x: rf"\b{x}\b", slang_words_dict.keys()))
         )
         self._we_pattern = re.compile(r"\b\w*([a-z])(\1{1,})\w*\b")
+        self._stopwords_pattern = re.compile(
+            "(%s)" % "|".join(map(lambda x: rf"\b{x}\b", stopwords))
+        )
+
+    def run(self, text: str):
+        text = text.lower()  # case folding
+        text = re.sub(r"\s+", " ", text, flags=re.UNICODE)  # remove whitespace
+        text = self._emoji_pattern.sub("", text)  # remove emoji
+        text = self._html_pattern.sub("", text)  # remove html tags
+        text = self._url_pattern.sub("", text)  # remove url
+        text = text.translate(str.maketrans("", "", string.digits))  # remove numbers
+        text = text.translate(
+            str.maketrans(string.punctuation, " " * len(string.punctuation))
+        )  # remove punctuation
+        text = " ".join(text.split())  # remove multiple whitespace
+        text = self._slang_pattern.sub(
+            lambda mo: self._slang_dict[mo.string[mo.start() : mo.end()]], text
+        )  # replace slang
+        text = self._we_pattern.sub(
+            lambda mo: re.sub(r"(?i)([a-z])(\1{1,})", r"\1", mo.string[mo.start() : mo.end()]),
+            text,
+        )  # remove word elongation
+        text = self._stopwords_pattern.sub("", text)  # remove stopwords
+        text = STEMMER.stem(text)  # stemming
+        return " ".join(text.split())
