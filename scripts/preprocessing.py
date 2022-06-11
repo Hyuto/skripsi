@@ -1,8 +1,9 @@
-import os
 import json
+import os
 import re
 import string
 from typing import Dict, Iterable
+
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 KAMUS_DIR = os.path.join(os.path.dirname(__file__), "..", "kamus")
@@ -125,7 +126,15 @@ class TweetPreprocessing:
             "(%s)" % "|".join(map(lambda x: rf"\b{x}\b", stopwords))
         )
 
-    def run(self, text: str):
+    def run(self, text: str) -> str:
+        """Run all preprocessing step on a text
+
+        Args:
+            text (str): text/sentence
+
+        Returns:
+            str: text after
+        """
         text = text.lower()  # case folding
         text = re.sub(r"\s+", " ", text, flags=re.UNICODE)  # remove whitespace
         text = self._emoji_pattern.sub("", text)  # remove emoji

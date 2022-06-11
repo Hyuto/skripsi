@@ -1,10 +1,9 @@
-from sklearn import preprocessing
 from ..preprocessing import (
     TweetPreprocessing,
-    replace_slang,
-    remove_noise,
-    replace_word_elongation,
     normalize_text,
+    remove_noise,
+    replace_slang,
+    replace_word_elongation,
 )
 
 

@@ -7,7 +7,7 @@ name = "pypi"
 format = "black ./scripts"
 isort = "isort ./scripts"
 lint = "flake8 ./scripts"
-notebook = "jupyter notebook"
+notebook = "jupyter notebook --no-browser"
 
 [packages]
 numpy = "*"
@@ -17,15 +17,15 @@ seaborn = "*"
 scikit-learn = "*"
 snscrape = "*"
 onnxruntime = "*"
-pytest = "*"
 pysastrawi = "*"
 tqdm = "*"
 
 [dev-packages]
 black = "*"
 isort = "*"
-notebook = "*"
+jupyter = "*"
 flake8 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"
