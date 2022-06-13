@@ -34,7 +34,8 @@ def remove_noise(text: str) -> str:
     )
     html_pattern = re.compile(r"<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
     url_pattern = re.compile(
-        r"(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*"
+        r"(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*"
+        + r"([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*"
     )
 
     text = text.lower()  # case folding
@@ -115,7 +116,8 @@ class TweetPreprocessing:
         )
         self._html_pattern = re.compile(r"<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
         self._url_pattern = re.compile(
-            r"(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*"
+            r"(https?:\/\/)(\s)*(www\.)?(\s)*((\w|\s)+\.)*"
+            + r"([\w\-\s]+\/)*([\w\-]+)((\?)?[\w\s]*=\s*[\w\%&]*)*"
         )
         self._slang_dict = slang_words_dict
         self._slang_pattern = re.compile(
