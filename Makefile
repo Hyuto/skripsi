@@ -1,5 +1,5 @@
 clean:
-	rm -rf .pytest_cache */.ipynb_checkpoints
+	find . | grep -E '(__pycache__|\.pyc|\.lprof|\.pytest_cache|\.ipynb_checkpoints)' | xargs rm -rf
 
 format:
 	pipenv run isort && pipenv run format
