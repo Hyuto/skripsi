@@ -26,6 +26,7 @@ isort = "*"
 jupyter = "*"
 flake8 = "*"
 pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.8"

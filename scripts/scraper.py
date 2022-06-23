@@ -50,8 +50,8 @@ class TwitterScraper:
         command = self._get_command()
 
         if export:
-            path = os.path.join("..", "output")
-            logging.info(f"Exporting to '{path}' directory")
+            path = os.path.join(os.path.dirname(__file__), "..", "output")
+            logging.info("Exporting to 'output' directory")
             os.makedirs(path, exist_ok=True)
             name = get_name(os.path.join(path, f"scrape-{datetime.now().strftime('%d-%b-%Y')}.csv"))
             f = open(name, "w", encoding="utf-8")
