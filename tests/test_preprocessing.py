@@ -1,4 +1,4 @@
-from ..preprocessing import (
+from scripts.preprocessing import (
     TweetPreprocessing,
     normalize_text,
     remove_noise,
