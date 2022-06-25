@@ -8,6 +8,8 @@ format = "black ./scripts"
 isort = "isort ./scripts"
 lint = "flake8 ./scripts"
 notebook = "jupyter notebook --no-browser"
+test = "coverage run -m pytest"
+coverage = "coverage report"
 
 [packages]
 numpy = "*"
