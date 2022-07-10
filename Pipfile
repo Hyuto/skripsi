@@ -3,14 +3,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[scripts]
-format = "black ./scripts"
-isort = "isort ./scripts"
-lint = "flake8 ./scripts"
-notebook = "jupyter notebook --no-browser"
-test = "coverage run -m pytest"
-coverage = "coverage report"
-
 [packages]
 numpy = "*"
 pandas = "*"
@@ -21,14 +13,16 @@ snscrape = "*"
 onnxruntime = "*"
 pysastrawi = "*"
 tqdm = "*"
+jupyter = "*"
 
 [dev-packages]
 black = "*"
 isort = "*"
-jupyter = "*"
-flake8 = "*"
 pytest = "*"
 coverage = "*"
+mypy = "*"
+pytest-cov = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"

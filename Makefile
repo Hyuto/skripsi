@@ -1,14 +1,20 @@
 clean:
-	find . | grep -E '(__pycache__|\.pyc|\.lprof|\.pytest_cache|\.ipynb_checkpoints|\.coverage)' | xargs rm -rf
+	find . | grep -E '(__pycache__|\.pyc|\.lprof|\.pytest_cache|\.ipynb_checkpoints)' | \
+	xargs rm -rf
 
 format:
-	pipenv run isort && pipenv run format
+	pipenv run isort .
+	pipenv run black . 
 
-lint:
-	pipenv run lint
+format-check:
+	pipenv run isort . --check-only
+	pipenv run black . --check
 
 local-notebook:
-	pipenv run notebook
+	pipenv run jupyter notebook --no-browser
 
 test:
-	pipenv run test
+	pipenv run pytest --cov=scripts/ -v
+
+typecheck:
+	pipenv run mypy --no-incremental
