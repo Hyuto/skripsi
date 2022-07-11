@@ -5,16 +5,17 @@ import logging
 import os
 from datetime import datetime
 from subprocess import PIPE, Popen
+from typing import Sequence
 
-from scraper import TwitterScraper
-from utils import get_name
+from .scraper import TwitterScraper
+from .utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
 class NewScraper(TwitterScraper):
-    def scrape(self, export, filter=["date", "content", "url"]):
+    def scrape(self, export: bool, filter: Sequence[str] = ["date", "content", "url"]) -> None:
         command = self._get_command()
 
         if export:
@@ -28,6 +29,7 @@ class NewScraper(TwitterScraper):
 
         logging.info("Scraping...")
         with Popen(command, stdout=PIPE, shell=True) as p:
+            assert p.stdout is not None, "None stdout"
             for out in p.stdout:
                 temp = json.loads(out)
                 content = (
@@ -45,7 +47,7 @@ class NewScraper(TwitterScraper):
         logging.info("Done!")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Testing model dengan tweet baru")
     parser.add_argument("-q", "--query", help="Search query", type=str, default="vaksin covid")
     parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)

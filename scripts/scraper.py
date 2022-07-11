@@ -5,8 +5,9 @@ import logging
 import os
 from datetime import datetime
 from subprocess import PIPE, Popen
+from typing import Optional, Sequence
 
-from utils import get_name
+from .utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
@@ -16,7 +17,15 @@ class TwitterScraper:
     crawler = "snscrape"
     scraper = "twitter-search"
 
-    def __init__(self, query, lang="id", max_result=None, since=None, until=None, json=True):
+    def __init__(
+        self,
+        query: str,
+        lang: str = "id",
+        max_result: Optional[int] = None,
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+        json: bool = True,
+    ) -> None:
         self.query = query
         self.lang = lang
         self.max_result = max_result
@@ -24,7 +33,7 @@ class TwitterScraper:
         self.until = until
         self.json = json
 
-    def _get_command(self):
+    def _get_command(self) -> str:
         global_options = []
         if self.json:
             global_options.append("--jsonl")
@@ -32,7 +41,7 @@ class TwitterScraper:
             global_options.append(f"--since {self.since}")
         if self.max_result:
             global_options.append(f"--max-results {self.max_result}")
-        global_options = " ".join(global_options)
+        new_global_options = " ".join(global_options)
 
         scrapper_options = [
             self.query,
@@ -42,11 +51,11 @@ class TwitterScraper:
         ]
         if self.until:
             scrapper_options.append(f"until:{self.until}")
-        scrapper_options = " ".join(scrapper_options)
+        new_scrapper_options = " ".join(scrapper_options)
 
-        return f'{self.crawler} {global_options} {self.scraper} "{scrapper_options}"'
+        return f'{self.crawler} {new_global_options} {self.scraper} "{new_scrapper_options}"'
 
-    def scrape(self, export, filter=["date", "content", "url"]):
+    def scrape(self, export: bool, filter: Sequence[str] = ["date", "content", "url"]) -> None:
         command = self._get_command()
 
         if export:
@@ -60,6 +69,8 @@ class TwitterScraper:
 
         logging.info("Scraping...")
         with Popen(command, stdout=PIPE, shell=True) as p:
+            assert p.stdout is not None, "None stdout"
+
             index = 1
             for out in p.stdout:
                 temp = json.loads(out)
@@ -79,7 +90,7 @@ class TwitterScraper:
         logging.info("Done!")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Scrapping Twitter Data")
     parser.add_argument("-q", "--query", help="Search query", type=str)
     parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)
