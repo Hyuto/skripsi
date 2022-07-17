@@ -1,5 +1,42 @@
+[tool.poetry]
+name = 'skripsi'
+version = '0.1.0'
+description = 'Main repository untuk project skripsi'
+authors = ['Wahyu Setianto <wahyusetianto19@gmail.com>']
+readme = 'README.md'
+
+[tool.poetry.urls]
+repository = 'https://github.com/Hyuto/skripsi'
+"Bug Tracker" = 'https://github.com/Hyuto/skripsi/issues'
+
+[tool.poetry.dependencies]
+python = '^3.8'
+numpy = '^1.23.1'
+pandas = '^1.4.3'
+matplotlib = '^3.5.2'
+seaborn = '^0.11.2'
+scikit-learn = '^1.1.1'
+snscrape = '^0.4.3'
+onnxruntime = '^1.11.1'
+PySastrawi = '^1.2.0'
+tqdm = '^4.64.0'
+jupyter = '^1.0.0'
+
+[tool.poetry.dev-dependencies]
+black = { extras = ['jupyter'], version = '^22.6.0' }
+isort = '^5.10.1'
+mypy = '^0.961'
+pytest = '^7.1.2'
+coverage = '^6.4.1'
+pytest-cov = '^3.0.0'
+pre-commit = '^2.20.0'
+
+[build-system]
+requires = ['poetry-core>=1.0.0']
+build-backend = 'poetry.core.masonry.api'
+
 [tool.mypy]
-files = ["scripts/**/*.py"]
+files = ['scripts']
 show_error_codes = true
 strict = true
 

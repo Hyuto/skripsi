@@ -1,7 +1,7 @@
 # Project Skripsi
 
 ![love](https://img.shields.io/badge/Made%20with-🖤-white)
-[![Python](https://img.shields.io/badge/Python-3.8-green?logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-≥3.8-green?logo=python)](https://www.python.org/)
 
 Main repository untuk project skripsi.
 
