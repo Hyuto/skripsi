@@ -47,7 +47,7 @@ class NewScraper(TwitterScraper):
         logging.info("Done!")
 
 
-def main() -> None:
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Testing model dengan tweet baru")
     parser.add_argument("-q", "--query", help="Search query", type=str, default="vaksin covid")
     parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)
@@ -63,7 +63,3 @@ def main() -> None:
 
     scraper = NewScraper(args.query, args.lang, args.max_results, args.since, args.until)
     scraper.scrape(args.export)
-
-
-if __name__ == "__main__":
-    main()

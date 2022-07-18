@@ -90,7 +90,7 @@ class TwitterScraper:
         logging.info("Done!")
 
 
-def main() -> None:
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scrapping Twitter Data")
     parser.add_argument("-q", "--query", help="Search query", type=str)
     parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)
@@ -106,7 +106,3 @@ def main() -> None:
 
     scraper = TwitterScraper(args.query, args.lang, args.max_results, args.since, args.until)
     scraper.scrape(args.export)
-
-
-if __name__ == "__main__":
-    main()
