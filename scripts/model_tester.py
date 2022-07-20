@@ -5,25 +5,29 @@ import logging
 import os
 from datetime import datetime
 from subprocess import PIPE, Popen
-from typing import Sequence
+from typing import Optional, Sequence
 
-from .scraper import TwitterScraper
-from .utils import get_name
+from scripts.scraper import TwitterScraper
+from scripts.utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
 class NewScraper(TwitterScraper):
-    def scrape(self, export: bool, filter: Sequence[str] = ["date", "content", "url"]) -> None:
+    def scrape(
+        self,
+        export: Optional[str] = None,
+        filter: Sequence[str] = ["date", "content", "url"],
+    ) -> None:
         command = self._get_command()
 
         if export:
-            path = os.path.join("..", "output")
-            logging.info(f"Exporting to '{path}' directory")
+            logging.info(f"Exporting to 'output' directory")
+            path = os.path.join(os.path.dirname(__file__), "..", "output")
             os.makedirs(path, exist_ok=True)
-            name = get_name(os.path.join(path, f"test-{datetime.now().strftime('%d-%b-%Y')}.csv"))
-            f = open(name, "w", encoding="utf-8")
+            filename = get_name(os.path.join(path, f"scrape-{export}.csv"))
+            f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
             writer.writerow(filter)
 
@@ -41,7 +45,7 @@ class NewScraper(TwitterScraper):
                     writer.writerow([temp[x] for x in filter])
 
         if export:
-            logging.info(f"Successfully Exported to {name}")
+            logging.info(f"Successfully Exported to {filename}")
             f.close()
 
         logging.info("Done!")
@@ -54,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument("-L", "--lang", help="Language", type=str, default="id")
     parser.add_argument("-S", "--since", help="Since", type=str)
     parser.add_argument("-U", "--until", help="Until", type=str)
-    parser.add_argument("-e", "--export", help="Export to csv", action="store_true")
+    parser.add_argument("-e", "--export", help="Name to export", type=str)
 
     args = parser.parse_args()
     logging.info("Starting script with params:")

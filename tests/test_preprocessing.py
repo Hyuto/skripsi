@@ -1,10 +1,4 @@
-from scripts.preprocessing import (
-    TweetPreprocessing,
-    normalize_text,
-    remove_noise,
-    replace_slang,
-    replace_word_elongation,
-)
+from scripts.preprocessing import *
 
 
 def test_replace_slang():
