@@ -18,3 +18,7 @@ test:
 
 typecheck:
 	poetry run mypy -m scripts --no-incremental --ignore-missing-imports
+
+setup:
+	poetry install
+	poetry run pre-commit install

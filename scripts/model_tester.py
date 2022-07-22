@@ -3,7 +3,6 @@ import csv
 import json
 import logging
 import os
-from datetime import datetime
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence
 
@@ -19,6 +18,7 @@ class NewScraper(TwitterScraper):
         self,
         export: Optional[str] = None,
         filter: Sequence[str] = ["date", "content", "url"],
+        verbose: bool = True,
     ) -> None:
         command = self._get_command()
 
@@ -36,10 +36,13 @@ class NewScraper(TwitterScraper):
             assert p.stdout is not None, "None stdout"
             for out in p.stdout:
                 temp = json.loads(out)
-                content = (
-                    f"{temp['content'][:77]}..." if len(temp["content"]) > 80 else temp["content"]
-                )
-                print(f"{temp['date']} - {content}")
+                if verbose:
+                    content = (
+                        f"{temp['content'][:77]}..."
+                        if len(temp["content"]) > 80
+                        else temp["content"]
+                    )
+                    print(f"{temp['date']} - {content}")
 
                 if export:
                     writer.writerow([temp[x] for x in filter])
@@ -59,6 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("-S", "--since", help="Since", type=str)
     parser.add_argument("-U", "--until", help="Until", type=str)
     parser.add_argument("-e", "--export", help="Name to export", type=str)
+    parser.add_argument("-v", "--verbose", help="Name to export", action="store_false")
 
     args = parser.parse_args()
     logging.info("Starting script with params:")
@@ -66,4 +70,4 @@ if __name__ == "__main__":
         print(f"   * {arg.title()}  : {value}")
 
     scraper = NewScraper(args.query, args.lang, args.max_results, args.since, args.until)
-    scraper.scrape(args.export)
+    scraper.scrape(args.export, args.verbose)
