@@ -19,6 +19,9 @@ test:
 typecheck:
 	poetry run mypy -m scripts --no-incremental --ignore-missing-imports
 
-setup:
+setup-dev:
 	poetry install
 	poetry run pre-commit install
+
+lock-deps:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes

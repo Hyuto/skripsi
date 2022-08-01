@@ -1,3 +1,5 @@
+"""Preprocessing modul yang berfungsi untuk menampung semua proses preprocessing data teks"""
+
 import json
 import os
 import re

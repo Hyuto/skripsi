@@ -2,13 +2,13 @@ import os
 
 
 def get_name(path: str) -> str:
-    """Generate valid (not existed) filename from
+    """Menggenerate nama file yang valid di dalam suatu direktory agar tidak terjadi overwrite
 
     Args:
         path (str): file path
 
     Returns:
-        str: full path not existed filename
+        str: full path dari nama file yang valid
     """
     if not os.path.exists(path):
         return path

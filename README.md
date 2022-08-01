@@ -19,12 +19,11 @@ Main repository untuk project skripsi.
 
 ## Setup
 
-Setup local environment. Install `poetry` terlebih dahulu, panduan instalasinya dapat dilihat [python-poetry](https://python-poetry.org/docs/#installation).
-
-Setelah proses penginstallan `poetry` run command berikut pada terminal
+Setup local environment. Buat _virtual environments_ baru kemudian install dependencies pada
+`requirements.txt`
 
 ```bash
-make setup
+$ pip install -r requirements.txt
 ```
 
 ## [App](https://github.com/Hyuto/skripsi-app)
@@ -40,4 +39,14 @@ langsung secara online dengan format link berikut:
 
 ```
 https://raw.githubusercontent.com/Hyuto/skripsi/master/data/<NAMA FILE>
+```
+
+## Development
+
+Install `poetry` terlebih dahulu, panduan instalasinya dapat dilihat
+[python-poetry](https://python-poetry.org/docs/#installation).
+Setelah proses penginstallan `poetry` run command berikut pada terminal
+
+```bash
+$ make setup-dev
 ```

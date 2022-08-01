@@ -8,13 +8,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
     env:
       PYTHON: ${{ matrix.python-version }}
+      OS: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Install poetry
@@ -35,4 +37,4 @@ jobs:
           file: ./coverage.xml
           name: skripsi
           flags: unittests
-          env_vars: PYTHON
+          env_vars: OS,PYTHON
