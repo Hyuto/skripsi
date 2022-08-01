@@ -1,3 +1,6 @@
+"""Script untuk generate command dan memanggil `snscrape` yang digunakan untuk scraping suatu topik
+   di twitter"""
+
 import argparse
 import csv
 import json
@@ -13,6 +16,20 @@ logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
 class TwitterScraper:
+    """Scrapping twitter berdasarkan query yang diberikan.
+
+    Examples:
+        Scraping spesifik topik
+
+        >>> scraper = TwitterScraper(query="minyak")
+        >>> scraper.scrape()
+        [ INFO ] Scraping...
+        1 - 2022-08-01T16:39:41+00:00 - @gerundghast im broke. harga minyak no joke rn
+        2 - 2022-08-01T16:39:17+00:00 - @beaulitude Minyak mahal jadi gimana kalo direbus? https://t.co/MnmgY4iNPs
+        3 - 2022-08-01T16:39:13+00:00 - @Damsllette ak blm nemu enakny dmna 😭😭 biasa pke minyak angin doang
+        ...
+    """
+
     crawler = "snscrape"
     scraper = "twitter-search"
 
@@ -33,6 +50,11 @@ class TwitterScraper:
         self.json = json
 
     def _get_command(self) -> str:
+        """Mengenerate command yang akan diberikan pada `snscrape`
+
+        Returns:
+            str: command
+        """
         global_options = []
         if self.json:
             global_options.append("--jsonl")
@@ -60,6 +82,15 @@ class TwitterScraper:
         filter: Sequence[str] = ["date", "content", "url"],
         verbose: bool = True,
     ) -> None:
+        """Running scraping dengan `snscrape`
+
+        Args:
+            export (Optional[str]): Nama file tempat table diexport pada direktori `output`.
+                Jika `None` maka table hasil scraping tidak akan diexport. Defaults to None.
+            filter (Sequence[str]): Filter kolom yang akan diexport. Kolom yang tersedia yaitu.
+                Defaults to ["date", "content", "url"].
+            verbose (bool): Tampilkan tweet yang di scrape di terminal. Defaults to True.
+        """
         command = self._get_command()
 
         if export is not None:
