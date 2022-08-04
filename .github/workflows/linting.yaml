@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '**.py'
   pull_request:
+    paths:
+      - '**.py'
 
 jobs:
   build:
@@ -25,4 +29,4 @@ jobs:
       - name: Format imports with isort
         run: poetry run isort --check-only .
       - name: Typecheck with mypy
-        run: poetry run mypy -m scripts --no-incremental --ignore-missing-imports
+        run: poetry run mypy scripts/ --no-incremental --ignore-missing-imports
