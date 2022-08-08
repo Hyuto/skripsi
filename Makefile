@@ -17,7 +17,7 @@ test:
 	poetry run pytest --cov=scripts/ -v
 
 typecheck:
-	poetry run mypy -m scripts --no-incremental --ignore-missing-imports
+	poetry run mypy scripts/ --no-incremental --ignore-missing-imports
 
 setup-dev:
 	poetry install
