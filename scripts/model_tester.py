@@ -6,14 +6,14 @@ import os
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence
 
-from scripts.scraper import TwitterScraper
-from scripts.utils import get_name
+from scraper import TwitterScraper
+from utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
-class NewScraper(TwitterScraper):
+class NewScraper(TwitterScraper):  # type: ignore
     def scrape(
         self,
         export: Optional[str] = None,
