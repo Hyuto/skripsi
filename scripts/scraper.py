@@ -9,7 +9,7 @@ import os
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence
 
-from utils import get_name
+from scripts.utils import get_name
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
