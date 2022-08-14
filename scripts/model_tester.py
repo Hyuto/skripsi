@@ -13,7 +13,7 @@ from scripts.utils import get_name
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
-class TestScraper(TwitterScraper):
+class ModelScraper(TwitterScraper):
     def scrape(
         self,
         export: Optional[str] = None,

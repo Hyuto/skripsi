@@ -31,9 +31,9 @@ def model_test(
     export: Optional[str] = typer.Option(None, help="Path to export"),
     verbose: bool = typer.Option(True, help="log all scraped tweets"),
 ) -> None:
-    from scripts.model_tester import TestScraper
+    from scripts.model_tester import ModelScraper
 
-    scraper = TestScraper(query, lang, max_results, since, until)
+    scraper = ModelScraper(query, lang, max_results, since, until)
     scraper.scrape(export=export, verbose=verbose)
 
 
