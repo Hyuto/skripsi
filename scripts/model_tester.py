@@ -13,7 +13,7 @@ from scripts.utils import get_name
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
-class NewScraper(TwitterScraper):
+class TestScraper(TwitterScraper):
     def scrape(
         self,
         export: Optional[str] = None,
@@ -37,7 +37,7 @@ class NewScraper(TwitterScraper):
             for out in p.stdout:
                 temp = json.loads(out)
                 if verbose:
-                    content = (
+                    content = repr(
                         f"{temp['content'][:77]}..."
                         if len(temp["content"]) > 80
                         else temp["content"]
@@ -52,22 +52,3 @@ class NewScraper(TwitterScraper):
             f.close()
 
         logging.info("Done!")
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Testing model dengan tweet baru")
-    parser.add_argument("-q", "--query", help="Search query", type=str, default="vaksin covid")
-    parser.add_argument("-n", "--max-results", help="Max number of tweet to scrape", type=int)
-    parser.add_argument("-L", "--lang", help="Language", type=str, default="id")
-    parser.add_argument("-S", "--since", help="Since", type=str)
-    parser.add_argument("-U", "--until", help="Until", type=str)
-    parser.add_argument("-e", "--export", help="Name to export", type=str)
-    parser.add_argument("-v", "--verbose", help="Name to export", action="store_false")
-
-    args = parser.parse_args()
-    logging.info("Starting script with params:")
-    for arg, value in vars(args).items():
-        print(f"   * {arg.title()}  : {value}")
-
-    scraper = NewScraper(args.query, args.lang, args.max_results, args.since, args.until)
-    scraper.scrape(args.export, args.verbose)
