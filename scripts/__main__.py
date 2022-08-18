@@ -5,15 +5,15 @@ import typer
 main = typer.Typer()
 
 
-@main.command("scrape", help="Scrapping Twitter Data")
+@main.command("scrape", help="Scrapping twitter berdasarkan query yang diberikan")
 def scrape(
-    query: str = typer.Argument(..., help="Search query"),
-    lang: str = typer.Option("id", help="Language"),
-    max_results: Optional[int] = typer.Option(None, help="Max number of tweet to scrape"),
-    since: Optional[str] = typer.Option(None, help="Since"),
-    until: Optional[str] = typer.Option(None, help="Until"),
-    export: Optional[str] = typer.Option(None, help="Path to export"),
-    verbose: bool = typer.Option(True, help="log all scraped tweets"),
+    query: str = typer.Argument(..., help="Query pencarian tweet"),
+    lang: str = typer.Option("id", help="Bahasa"),
+    max_results: Optional[int] = typer.Option(None, help="Banyak tweet maksimal yang discrape"),
+    since: Optional[str] = typer.Option(None, help="Since (batasan awal tanggal tweet)"),
+    until: Optional[str] = typer.Option(None, help="Until (batasan akhir tanggal tweet)"),
+    export: Optional[str] = typer.Option(None, help="Nama file untuk export tweet hasil scrape"),
+    verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
 ) -> None:
     from scripts.scraper import TwitterScraper
 
@@ -23,13 +23,13 @@ def scrape(
 
 @main.command("model-test", help="Testing model dengan tweet baru")
 def model_test(
-    query: str = typer.Argument("vaksin covid", help="Search query"),
-    lang: str = typer.Option("id", help="Language"),
-    max_results: Optional[int] = typer.Option(None, help="Max number of tweet to scrape"),
-    since: Optional[str] = typer.Option(None, help="Since"),
-    until: Optional[str] = typer.Option(None, help="Until"),
-    export: Optional[str] = typer.Option(None, help="Path to export"),
-    verbose: bool = typer.Option(True, help="log all scraped tweets"),
+    query: str = typer.Argument("vaksin covid", help="Query pencarian tweet"),
+    lang: str = typer.Option("id", help="Bahasa"),
+    max_results: Optional[int] = typer.Option(None, help="Banyak tweet maksimal yang discrape"),
+    since: Optional[str] = typer.Option(None, help="Since (batasan awal tanggal tweet)"),
+    until: Optional[str] = typer.Option(None, help="Until (batasan akhir tanggal tweet)"),
+    export: Optional[str] = typer.Option(None, help="Nama file untuk export tweet hasil scrape"),
+    verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
 ) -> None:
     from scripts.model_tester import ModelScraper
 
