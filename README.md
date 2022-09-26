@@ -11,11 +11,12 @@ Main repository untuk project skripsi.
 
 ## To Do's
 
-1. Labelling data
-2. Preprocess & Visualisasi (TSNE visualization on corpus)
+1. Add user excluding tweet
+2. Labelling data
+3. Preprocess & Visualisasi (TSNE visualization on corpus)
    - liat apakah _linearly separable_
-3. Modelling dengan SVM (setiap kernel)
-4. Export model ke onnx dan deploy di app
+4. Modelling dengan SVM (setiap kernel)
+5. Export model ke onnx dan deploy di app
 
 ## Setup
 
