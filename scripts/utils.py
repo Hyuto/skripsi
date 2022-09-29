@@ -1,4 +1,7 @@
 import os
+from datetime import datetime
+
+import psutil
 
 
 def get_name(path: str) -> str:
@@ -22,3 +25,18 @@ def get_name(path: str) -> str:
             return new_name
         else:
             index += 1
+
+
+def datetime_validator(strd: str) -> None:
+    try:
+        datetime.fromisoformat(strd)
+    except ValueError:  # pragma: no cover
+        raise ValueError("Incorrect date format!")
+
+
+def kill_proc_tree(pid: int) -> None:
+    parent = psutil.Process(pid)
+    children = parent.children(recursive=True)
+    for child in children:
+        child.kill()
+    psutil.wait_procs(children, timeout=5)

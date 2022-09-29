@@ -1,15 +1,14 @@
 """Script untuk generate command dan memanggil `snscrape` yang digunakan untuk scraping suatu topik
    di twitter"""
 
-import argparse
 import csv
 import json
 import logging
 import os
 from subprocess import PIPE, Popen
-from typing import Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
-from scripts.utils import get_name
+from scripts.utils import datetime_validator, get_name, kill_proc_tree
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
@@ -37,17 +36,17 @@ class TwitterScraper:
         self,
         query: str,
         lang: str = "id",
-        max_result: Optional[int] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
-        json: bool = True,
     ) -> None:
         self.query = query
         self.lang = lang
-        self.max_result = max_result
+        if since:
+            datetime_validator(since)
         self.since = since
+        if until:
+            datetime_validator(until)
         self.until = until
-        self.json = json
 
     def _get_command(self) -> str:
         """Mengenerate command yang akan diberikan pada `snscrape`
@@ -55,13 +54,9 @@ class TwitterScraper:
         Returns:
             str: command
         """
-        global_options = []
-        if self.json:
-            global_options.append("--jsonl")
+        global_options = ["--jsonl"]
         if self.since:
             global_options.append(f"--since {self.since}")
-        if self.max_result:
-            global_options.append(f"--max-results {self.max_result}")
         new_global_options = " ".join(global_options)
 
         scrapper_options = [
@@ -76,22 +71,54 @@ class TwitterScraper:
 
         return f'{self.crawler} {new_global_options} {self.scraper} "{new_scrapper_options}"'
 
+    def _flatten(
+        self, nested_d: Dict[str, Any], parent_key: str = "", sep: str = "."
+    ) -> Dict[str, Any]:
+        items = []  # type: List[Tuple[str, Any]]
+        for k, v in nested_d.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, Dict):
+                items.extend(self._flatten(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
+    def _denied_users_handler(self, denied_users: Union[Sequence[str], str]) -> Sequence[str]:
+        if type(denied_users) == str:
+            assert os.path.exists(denied_users), "File not exist!!"
+            with open(denied_users) as reader:
+                users = json.load(reader)  # type: Sequence[str]
+            return users
+        elif isinstance(denied_users, Sequence):
+            return denied_users
+        else:  # pragma: no cover
+            raise TypeError("Expected pathlike string or Sequence on denied_users!")
+
     def scrape(
         self,
+        add_features: Sequence[str] = [],
+        denied_users: Optional[Union[str, Sequence[str]]] = None,
+        max_result: Optional[int] = None,
         export: Optional[str] = None,
-        filter: Sequence[str] = ["date", "content", "url"],
         verbose: bool = True,
     ) -> None:
         """Running scraping dengan `snscrape`
 
         Args:
+            add_features (Sequence[str]): Menambahkan filter kolom yang akan diexport.
+                Defaults to [].
+            denied_users (Optional[Union[str, Sequence[str]]]): List user yang tweetnya dapat
+                dihiraukan. Dapat berupa pathlike string ke file tempat list user disimpan
+                (json format) atau berupa sequence. Defaults to None.
+            max_result (Optional[int]): Jumlah maksimal tweet yang di scrape. Defaults to None.
             export (Optional[str]): Nama file tempat table diexport pada direktori `output`.
                 Jika `None` maka table hasil scraping tidak akan diexport. Defaults to None.
-            filter (Sequence[str]): Filter kolom yang akan diexport. Kolom yang tersedia yaitu.
-                Defaults to ["date", "content", "url"].
             verbose (bool): Tampilkan tweet yang di scrape di terminal. Defaults to True.
         """
         command = self._get_command()
+        filters = ["date", "url", "user.username", *add_features, "content"]
+        if denied_users is not None:
+            denied_users = self._denied_users_handler(denied_users)
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")
@@ -100,26 +127,35 @@ class TwitterScraper:
             filename = get_name(os.path.join(path, f"scrape-{export}.csv"))
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
-            writer.writerow(filter)
+            writer.writerow(filters)
 
         logging.info("Scraping...")
-        with Popen(command, stdout=PIPE, shell=True) as p:
-            assert p.stdout is not None, "None stdout"
+        snscrape = Popen(command, stdout=PIPE, shell=True)
+        assert snscrape.stdout is not None, "None stdout"
 
-            index = 1
-            for out in p.stdout:
-                temp = json.loads(out)
-                if verbose:
-                    content = repr(
-                        f"{temp['content'][:77]}..."
-                        if len(temp["content"]) > 80
-                        else temp["content"]
-                    )
-                    print(f"{index} - {temp['date']} - {content}")
+        index = 1
+        for out in snscrape.stdout:
+            temp = self._flatten(json.loads(out))
 
-                if export:
-                    writer.writerow([temp[x] for x in filter])
-                index += 1
+            if denied_users is not None:  # filter username
+                if temp["user.username"] in denied_users:
+                    continue
+
+            if verbose:  # logging output
+                content = repr(
+                    f"{temp['content'][:67]}..." if len(temp["content"]) > 70 else temp["content"]
+                )
+                print(f"{index} - {temp['date']} - {temp['user.username']} - {content}")
+
+            if export:  # write row
+                row = [temp[x] for x in filters]
+                writer.writerow(row)
+
+            if max_result:  # brake and kill subprocess
+                if index >= max_result:
+                    kill_proc_tree(snscrape.pid)
+                    break
+            index += 1
 
         if export:
             logging.info(f"Successfully Exported to {filename}")
