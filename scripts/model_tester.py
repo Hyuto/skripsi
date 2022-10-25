@@ -37,7 +37,7 @@ class ModelScraper(TwitterScraper):
         command = self._get_command()
         filters = ["date", "url", "user.username", *add_features, "content"]
         if denied_users is not None:
-            denied_users = self._denied_users_handler(denied_users)
+            denied_users = self._denied_users_handler(denied_users)  # pragma: no cover
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")
@@ -57,7 +57,7 @@ class ModelScraper(TwitterScraper):
             temp = self._flatten(json.loads(out))
 
             if denied_users is not None:  # filter username
-                if temp["user.username"] in denied_users:
+                if temp["user.username"] in denied_users:  # pragma: no cover
                     continue
 
             if verbose:  # logging output
