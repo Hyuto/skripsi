@@ -5,11 +5,11 @@ on:
     branches:
       - master
     paths:
-      - 'scripts/**'
+      - 'src/**'
       - 'tests/**'
   pull_request:
     paths:
-      - 'scripts/**'
+      - 'src/**'
       - 'tests/**'
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Test with pytest
-        run: poetry run pytest --cov=scripts/ -v --cov-report=xml:./coverage.xml
+        run: poetry run pytest --cov=src/ -v --cov-report=xml:./coverage.xml
       - name: Upload code coverage
         uses: codecov/codecov-action@v2
         with:

@@ -29,4 +29,4 @@ jobs:
       - name: Format imports with isort
         run: poetry run isort --check-only .
       - name: Typecheck with mypy
-        run: poetry run mypy scripts/ --no-incremental --ignore-missing-imports
+        run: poetry run mypy src/ --no-incremental --ignore-missing-imports

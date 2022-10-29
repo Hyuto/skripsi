@@ -5,8 +5,8 @@ import os
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence, Union
 
-from scripts.scraper import TwitterScraper
-from scripts.utils import get_name, kill_proc_tree
+from src.scraper import TwitterScraper
+from src.utils import get_name, kill_proc_tree
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)

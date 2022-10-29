@@ -1,6 +1,6 @@
 import os
 
-from scripts.utils import get_name
+from src.utils import get_name
 
 current_directory = os.path.dirname(__file__)
 

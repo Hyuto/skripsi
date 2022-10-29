@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from scripts.scraper import TwitterScraper
+from src.scraper import TwitterScraper
 
 current_dir = os.path.dirname(__file__)
 

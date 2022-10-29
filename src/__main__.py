@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import List, Optional
+from typing import Optional
 
 import typer
 
@@ -45,7 +45,7 @@ def scrape(
     for k, v in args.items():
         print(f"  * {k} : {v}")
 
-    from scripts.scraper import TwitterScraper
+    from src.scraper import TwitterScraper
 
     scraper = TwitterScraper(query, lang, since, until)
     scraper.scrape(
@@ -91,7 +91,7 @@ def model_test(
     for k, v in args.items():
         print(f"  * {k} : {v}")
 
-    from scripts.scraper import TwitterScraper
+    from src.scraper import TwitterScraper
 
     scraper = TwitterScraper(query, lang, since, until)
     scraper.scrape(

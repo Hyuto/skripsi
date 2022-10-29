@@ -8,7 +8,7 @@ import os
 from subprocess import PIPE, Popen
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
-from scripts.utils import datetime_validator, get_name, kill_proc_tree
+from src.utils import datetime_validator, get_name, kill_proc_tree
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)

@@ -31,5 +31,5 @@ repos:
       - id: mypy
         name: typechecking using mypy
         language: system
-        entry: mypy scripts/ --no-incremental --ignore-missing-imports
+        entry: mypy src/ --no-incremental --ignore-missing-imports
         pass_filenames: false

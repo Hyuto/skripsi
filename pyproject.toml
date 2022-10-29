@@ -44,7 +44,7 @@ requires = ['poetry-core>=1.0.0']
 build-backend = 'poetry.core.masonry.api'
 
 [tool.mypy]
-files = ['scripts']
+files = ['src']
 show_error_codes = true
 strict = true
 

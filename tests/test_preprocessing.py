@@ -1,4 +1,4 @@
-from scripts.preprocessing import *
+from src.preprocessing import *
 
 
 def test_TweetPreprocessing():

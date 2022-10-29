@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from scripts.model_tester import ModelScraper
+from src.model_tester import ModelScraper
 
 current_dir = os.path.dirname(__file__)
 
