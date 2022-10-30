@@ -1,6 +1,8 @@
+import glob
 import logging
 import os
-from typing import Optional
+import shutil
+from typing import List, Optional
 
 import typer
 
@@ -101,6 +103,40 @@ def model_test(
         max_result=max_results,
         verbose=verbose,
     )
+
+
+@main.command("clean", help="Membersihkan project directory")
+def clean_up(
+    clear: bool = typer.Option(False, help="Menghapus semua folder cache"),
+    verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
+) -> None:
+    main_dir = os.path.join(os.path.dirname(__file__), "..")
+    cache_dir = [".mypy_cache", ".pytest_cache", "./**/__pycache__"]
+    additional_dir = ["output", "./**/.ipynb_checkpoints"]
+    cache_file = [".coverage"]
+    additional_file: List[str] = []
+
+    def delete(folder: bool, iterator: List[str]) -> None:
+        # loop through
+        for x in iterator:
+            glob_dirs = glob.glob(os.path.join(main_dir, x))
+            for path in glob_dirs:
+                try:
+                    if verbose:
+                        logging.info(f"Deleting : {path}")
+                    if folder:
+                        shutil.rmtree(path)
+                    else:
+                        os.remove(path)
+                except:
+                    logging.error(f"Error on deleting : {path}")
+
+    directory = cache_dir + additional_dir if clear else cache_dir
+    delete(folder=True, iterator=directory)
+    files = cache_file + additional_file if clear else cache_file
+    delete(folder=False, iterator=files)
+
+    logging.info("Done!")
 
 
 main()

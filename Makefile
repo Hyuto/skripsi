@@ -1,6 +1,5 @@
 clean:
-	find . | grep -E '(__pycache__|\.pyc|\.lprof|\.pytest_cache|\.ipynb_checkpoints|\.mypy_cache|output)' | \
-	xargs rm -rf
+	poetry run python -m src clean
 
 format:
 	poetry run isort .
