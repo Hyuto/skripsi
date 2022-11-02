@@ -5,6 +5,8 @@ import os
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence, Union
 
+from src.model import Model
+from src.preprocessing import preprocessing
 from src.scraper import TwitterScraper
 from src.utils import get_name, kill_proc_tree
 
@@ -13,6 +15,17 @@ logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
 class ModelScraper(TwitterScraper):
+    def __init__(
+        self,
+        model: str,
+        query: str,
+        lang: str = "id",
+        since: Optional[str] = None,
+        until: Optional[str] = None,
+    ) -> None:
+        super().__init__(query, lang, since, until)
+        self.model = Model(model)
+
     def scrape(
         self,
         add_features: Sequence[str] = [],
@@ -46,7 +59,7 @@ class ModelScraper(TwitterScraper):
             filename = get_name(os.path.join(path, f"scrape-{export}.csv"))
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
-            writer.writerow(filters)
+            writer.writerow(filters + ["p_emotions"])
 
         logging.info("Scraping...")
         snscrape = Popen(command, stdout=PIPE, shell=True)
@@ -60,14 +73,19 @@ class ModelScraper(TwitterScraper):
                 if temp["user.username"] in denied_users:  # pragma: no cover
                     continue
 
+            prediction = self.model.predict(preprocessing(temp["content"]))
+
             if verbose:  # logging output
                 content = repr(
-                    f"{temp['content'][:67]}..." if len(temp["content"]) > 70 else temp["content"]
+                    f"{temp['content'][:67]}..." if len(temp["content"]) > 69 else temp["content"]
                 )
-                print(f"{index} - {temp['date']} - {temp['user.username']} - {content}")
+                print(
+                    f"{index} - {temp['date']} - {temp['user.username']} - "
+                    + f"{content} - {prediction[0][0]}"
+                )
 
             if export:  # write row
-                row = [temp[x] for x in filters]
+                row = [temp[x] for x in filters] + [prediction[0][0]]
                 writer.writerow(row)
 
             if max_result:  # brake and kill subprocess
