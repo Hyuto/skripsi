@@ -111,7 +111,7 @@ def model_test(
     )
 
 
-@main.command("clean", help="Membersihkan project directory")
+@main.command("clean", help="Membersihkan project main directory")
 def clean_up(
     clear: bool = typer.Option(False, help="Menghapus semua folder cache"),
     verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),

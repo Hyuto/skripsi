@@ -17,6 +17,14 @@ STEMMER = StemmerFactory().create_stemmer()
 
 
 def preprocessing(text: str) -> str:
+    """Preprocessing raw text
+
+    Args:
+        text (str): Raw text.
+
+    Returns:
+        str: Cleaned text.
+    """
     text = text.lower()
     text = re.sub(r"\s+", " ", text, flags=re.UNICODE)  # remove whitespace
     text = emoji_to_words(text)  # remove emoji

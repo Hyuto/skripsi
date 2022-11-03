@@ -17,6 +17,12 @@ logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 class TwitterScraper:
     """Scrapping twitter berdasarkan query yang diberikan.
 
+    Args:
+        query (str): Search query.
+        lang (str): Language. Defaults to "id".
+        since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
+        until (Optional[str]): Until [string isoformated datetime]. Defaults to None.
+
     Examples:
         Scraping spesifik topik
 
@@ -74,6 +80,16 @@ class TwitterScraper:
     def _flatten(
         self, nested_d: Dict[str, Any], parent_key: str = "", sep: str = "."
     ) -> Dict[str, Any]:
+        """Flatten nested dictionary
+
+        Args:
+            nested_d (Dict[str, Any]): Nested dictionary to flatten.
+            parent_key (str, optional): Parrent key. Defaults to "".
+            sep (str, optional): Nestted dictionary sepparator. Defaults to ".".
+
+        Returns:
+            Dict[str, Any]: Flatten dictionary.
+        """
         items = []  # type: List[Tuple[str, Any]]
         for k, v in nested_d.items():
             new_key = parent_key + sep + k if parent_key else k
@@ -84,6 +100,7 @@ class TwitterScraper:
         return dict(items)
 
     def _denied_users_handler(self, denied_users: Union[Sequence[str], str]) -> Sequence[str]:
+        """Handle denied users."""
         if type(denied_users) == str:
             assert os.path.exists(denied_users), "File not exist!!"
             with open(denied_users) as reader:

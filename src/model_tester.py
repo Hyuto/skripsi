@@ -15,10 +15,20 @@ logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
 
 
 class ModelScraper(TwitterScraper):
+    """Model scrapper.
+
+    Args:
+        model (str): Model path.
+        query (str): Search query. Defaults to "vaksin covid".
+        lang (str): Language. Defaults to "id".
+        since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
+        until (Optional[str]): Until [string isoformated datetime]. Defaults to None.
+    """
+
     def __init__(
         self,
         model: str,
-        query: str,
+        query: str = "vaksin covid",
         lang: str = "id",
         since: Optional[str] = None,
         until: Optional[str] = None,

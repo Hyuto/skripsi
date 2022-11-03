@@ -28,6 +28,14 @@ def get_name(path: str) -> str:
 
 
 def datetime_validator(strd: str) -> None:
+    """Validate string isoformated datetime.
+
+    Args:
+        strd (str): string isoformated datetime.
+
+    Raises:
+        ValueError: incorrect string datetime format.
+    """
     try:
         datetime.fromisoformat(strd)
     except ValueError:  # pragma: no cover
@@ -35,6 +43,11 @@ def datetime_validator(strd: str) -> None:
 
 
 def kill_proc_tree(pid: int) -> None:
+    """Kill process
+
+    Args:
+        pid (int): pid
+    """
     parent = psutil.Process(pid)
     children = parent.children(recursive=True)
     for child in children:
