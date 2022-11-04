@@ -27,7 +27,7 @@ $ pip install -r requirements.txt
 
 ## [App](https://github.com/Hyuto/skripsi-app)
 
-Implementasi model yang telah di latih dalam bentuk web application dengan mendeploy model yang
+Implementasi model yang telah di latih dalam bentuk aplikasi dengan mendeploy model yang
 telah di latih, model tersebut kemudian diconvert ke bentuk `onnx` yang selanjutnya akan di deploy
 di `android` dan `web` dengan menggunakan `react-native` dan `onnxruntime`.
 
