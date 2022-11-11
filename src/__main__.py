@@ -64,7 +64,7 @@ def scrape(
 
 @main.command("model-test", help="Testing model dengan tweet baru")
 def model_test(
-    query: str = typer.Argument("vaksin covid", help="Query pencarian tweet"),
+    query: str = typer.Argument("vaksin (corona OR covid)", help="Query pencarian tweet"),
     model: str = typer.Argument(
         os.path.join(current_dir, "..", "models", "model.onnx"), help="Path model yang digunakan"
     ),
@@ -118,7 +118,7 @@ def clean_up(
 ) -> None:
     main_dir = os.path.join(current_dir, "..")
     cache_dir = [".mypy_cache", ".pytest_cache", "./**/__pycache__"]
-    additional_dir = ["output", "./**/.ipynb_checkpoints"]
+    additional_dir = ["output", "./**/output", "./**/.ipynb_checkpoints"]
     cache_file = [".coverage"]
     additional_file: List[str] = []
 

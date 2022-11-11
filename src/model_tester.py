@@ -19,7 +19,7 @@ class ModelScraper(TwitterScraper):
 
     Args:
         model (str): Model path.
-        query (str): Search query. Defaults to "vaksin covid".
+        query (str): Search query. Defaults to "vaksin (corona OR covid)".
         lang (str): Language. Defaults to "id".
         since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
         until (Optional[str]): Until [string isoformated datetime]. Defaults to None.
@@ -28,7 +28,7 @@ class ModelScraper(TwitterScraper):
     def __init__(
         self,
         model: str,
-        query: str = "vaksin covid",
+        query: str = "vaksin (corona OR covid)",
         lang: str = "id",
         since: Optional[str] = None,
         until: Optional[str] = None,
