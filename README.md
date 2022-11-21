@@ -31,7 +31,7 @@ Implementasi model yang telah di latih dalam bentuk aplikasi dengan mendeploy mo
 telah di latih, model tersebut kemudian diconvert ke bentuk `onnx` yang selanjutnya akan di deploy
 di `android` dan `web` dengan menggunakan `react-native` dan `onnxruntime`.
 
-## [Dataset](.data)
+## [Dataset](./data)
 
 Dataset adalah data hasil web scraping twitter pada topik `vaksin covid-19` pada tahun 2021 selama
 12 bulan. Library yang digunakan untuk melakukan scraping adalah [`snscrape`](https://github.com/JustAnotherArchivist/snscrape)
