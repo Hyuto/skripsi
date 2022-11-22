@@ -147,32 +147,38 @@ class TwitterScraper:
             writer.writerow(filters)
 
         logging.info("Scraping...")
-        snscrape = Popen(command, stdout=PIPE, shell=True)
+        snscrape = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
         assert snscrape.stdout is not None, "None stdout"
 
-        index = 1
-        for out in snscrape.stdout:
-            temp = self._flatten(json.loads(out))
+        try:
+            index = 1
+            for out in snscrape.stdout:
+                temp = self._flatten(json.loads(out))
 
-            if denied_users is not None:  # filter username
-                if temp["user.username"] in denied_users:
-                    continue
+                if denied_users is not None:  # filter username
+                    if temp["user.username"] in denied_users:
+                        continue
 
-            if verbose:  # logging output
-                content = repr(
-                    f"{temp['content'][:67]}..." if len(temp["content"]) > 70 else temp["content"]
-                )
-                print(f"{index} - {temp['date']} - {temp['user.username']} - {content}")
+                if verbose:  # logging output
+                    content = repr(
+                        f"{temp['content'][:67]}..."
+                        if len(temp["content"]) > 70
+                        else temp["content"]
+                    )
+                    print(f"{index} - {temp['date']} - {temp['user.username']} - {content}")
 
-            if export:  # write row
-                row = [temp[x] for x in filters]
-                writer.writerow(row)
+                if export:  # write row
+                    row = [temp[x] for x in filters]
+                    writer.writerow(row)
 
-            if max_result:  # brake and kill subprocess
-                if index >= max_result:
-                    kill_proc_tree(snscrape.pid)
-                    break
-            index += 1
+                if max_result:  # brake and kill subprocess
+                    if index >= max_result:
+                        kill_proc_tree(snscrape.pid)
+                        break
+                index += 1
+        except KeyboardInterrupt:  # pragma: no cover
+            logging.info("Received exit from user, exiting...")
+            kill_proc_tree(snscrape.pid)
 
         if export:
             logging.info(f"Successfully Exported to {filename}")
