@@ -1,24 +1,24 @@
-import os
+from pathlib import Path
 
 import pandas as pd
 from src.scraper import TwitterScraper
 
-current_dir = os.path.dirname(__file__)
+main_dir = Path(__file__).parents[1]
 
 
 def test_TwitterScraper():
-    output_dir = os.path.join(current_dir, "..", "output")
+    output_dir = main_dir / "output"
 
     # test max_result
     TwitterScraper("minyak").scrape(
         export="minyak",
         max_result=10,
-        denied_users=os.path.join(os.path.dirname(__file__), "..", "data", "denied-users.json"),
+        denied_users=(main_dir / "data" / "denied-users.json").as_posix(),
     )
-    filename = os.path.join(output_dir, "scrape-minyak.csv")
-    dataset = pd.read_csv(filename)
+    filename = output_dir / "scrape-minyak.csv"
+    dataset = pd.read_csv(filename.as_posix())
     assert len(dataset) == 10
-    os.remove(filename)
+    filename.unlink(missing_ok=True)
 
     # test since and until
     since, until = "2022-07-18", "2022-07-19"
@@ -27,8 +27,8 @@ def test_TwitterScraper():
         verbose=False,
         denied_users=["faraacademy"],
     )
-    filename = os.path.join(output_dir, "scrape-ayam.csv")
-    dataset = pd.read_csv(filename)
+    filename = output_dir / "scrape-ayam.csv"
+    dataset = pd.read_csv(filename.as_posix())
     dataset["date"] = pd.to_datetime(dataset["date"])
     assert (dataset["date"] >= since).all() and (dataset["date"] < until).all()
-    os.remove(filename)
+    filename.unlink(missing_ok=True)

@@ -4,7 +4,7 @@
 import csv
 import json
 import logging
-import os
+from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
@@ -12,6 +12,9 @@ from src.utils import datetime_validator, get_name, kill_proc_tree
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
+
+# main directory
+main_dir = Path(__file__).parents[1]
 
 
 class TwitterScraper:
@@ -102,7 +105,7 @@ class TwitterScraper:
     def _denied_users_handler(self, denied_users: Union[Sequence[str], str]) -> Sequence[str]:
         """Handle denied users."""
         if type(denied_users) == str:
-            assert os.path.exists(denied_users), "File not exist!!"
+            assert Path(denied_users).exists(), "File not exist!!"
             with open(denied_users) as reader:
                 users = json.load(reader)  # type: Sequence[str]
             return users
@@ -139,9 +142,9 @@ class TwitterScraper:
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")
-            path = os.path.join(os.path.dirname(__file__), "..", "output")
-            os.makedirs(path, exist_ok=True)
-            filename = get_name(os.path.join(path, f"scrape-{export}.csv"))
+            path = main_dir / "output"
+            path.mkdir(exist_ok=True)
+            filename = get_name((path / f"scrape-{export}.csv").as_posix())
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
             writer.writerow(filters)

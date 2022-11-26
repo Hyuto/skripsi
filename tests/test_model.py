@@ -1,13 +1,13 @@
-import os
+from pathlib import Path
 
 import numpy as np
 from src.model import Model
 
-current_dir = os.path.dirname(__file__)
+main_dir = Path(__file__).parents[1]
 
 
 def test_predict():
-    model = Model(os.path.join(current_dir, "..", "models", "model.onnx"))
+    model = Model((main_dir / "models" / "model.onnx").as_posix())
 
     assert model.predict("test")
     assert model.predict(["test"])

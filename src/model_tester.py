@@ -1,7 +1,7 @@
 import csv
 import json
 import logging
-import os
+from pathlib import Path
 from subprocess import PIPE, Popen
 from typing import Optional, Sequence, Union
 
@@ -12,6 +12,9 @@ from src.utils import get_name, kill_proc_tree
 
 # Setup logging
 logging.basicConfig(format="[ %(levelname)s ] %(message)s", level=logging.INFO)
+
+# main directory
+main_dir = Path(__file__).parents[1]
 
 
 class ModelScraper(TwitterScraper):
@@ -64,9 +67,9 @@ class ModelScraper(TwitterScraper):
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")
-            path = os.path.join(os.path.dirname(__file__), "..", "output")
-            os.makedirs(path, exist_ok=True)
-            filename = get_name(os.path.join(path, f"scrape-{export}.csv"))
+            path = main_dir / "output"
+            path.mkdir(exist_ok=True)
+            filename = get_name((path / f"scrape-{export}.csv").relative_to(main_dir).as_posix())
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
             writer.writerow(filters + ["p_emotions"])
