@@ -3,7 +3,7 @@ import json
 import logging
 from pathlib import Path
 from subprocess import PIPE, Popen
-from typing import Optional, Sequence, Union
+from typing import Optional, Sequence
 
 from src.model import Model
 from src.preprocessing import preprocessing
@@ -42,7 +42,7 @@ class ModelScraper(TwitterScraper):
     def scrape(
         self,
         add_features: Sequence[str] = [],
-        denied_users: Optional[Union[str, Sequence[str]]] = None,
+        denied_users: Optional[str] = None,
         max_result: Optional[int] = None,
         export: Optional[str] = None,
         verbose: bool = True,
@@ -52,7 +52,7 @@ class ModelScraper(TwitterScraper):
         Args:
             add_features (Sequence[str]): Menambahkan filter kolom yang akan diexport.
                 Defaults to [].
-            denied_users (Optional[Union[str, Sequence[str]]]): List user yang tweetnya dapat
+            denied_users (Optional[str]): List user yang tweetnya dapat
                 dihiraukan. Dapat berupa pathlike string ke file tempat list user disimpan
                 (json format) atau berupa sequence. Defaults to None.
             max_result (Optional[int]): Jumlah maksimal tweet yang di scrape. Defaults to None.
@@ -63,7 +63,7 @@ class ModelScraper(TwitterScraper):
         command = self._get_command()
         filters = ["date", "url", "user.username", *add_features, "content"]
         if denied_users is not None:
-            denied_users = self._denied_users_handler(denied_users)  # pragma: no cover
+            denied_users = self._denied_users_handler(denied_users)  # type: ignore
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")

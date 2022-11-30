@@ -12,7 +12,7 @@ def test_ModelScraper():
 
     # test max_result
     ModelScraper(model_path.relative_to(main_dir).as_posix(), "vaksin covid").scrape(
-        export="vaksin_covid", max_result=10
+        export="vaksin_covid", max_result=10, denied_users=main_dir / "data" / "denied-users.json"
     )
     filename = output_dir / "scrape-vaksin_covid.csv"
     dataset = pd.read_csv(filename.as_posix())

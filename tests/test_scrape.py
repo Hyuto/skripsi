@@ -22,11 +22,7 @@ def test_TwitterScraper():
 
     # test since and until
     since, until = "2022-07-18", "2022-07-19"
-    TwitterScraper("ayam bakar", since=since, until=until).scrape(
-        export="ayam",
-        verbose=False,
-        denied_users=["faraacademy"],
-    )
+    TwitterScraper("ayam bakar", since=since, until=until).scrape(export="ayam", verbose=False)
     filename = output_dir / "scrape-ayam.csv"
     dataset = pd.read_csv(filename.as_posix())
     dataset["date"] = pd.to_datetime(dataset["date"])

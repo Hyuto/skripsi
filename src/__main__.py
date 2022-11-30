@@ -34,8 +34,7 @@ def scrape(
     denied_users: Optional[str] = typer.Option(
         (main_dir / "data" / "denied-users.json").relative_to(main_dir).as_posix(),
         help=(
-            "List user yang tweetnya diabaikan [pathlike string ke file list user "
-            + '(json formated) atau Sequance separated by ","]'
+            "List user yang tweetnya diabaikan [pathlike string ke file list user (json formated)]"
         ),
     ),
     verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
@@ -43,7 +42,7 @@ def scrape(
     add_features = add_features.split(",") if add_features else []  # type: ignore
     if denied_users:
         if not Path(denied_users).exists():
-            denied_users = denied_users.split(",")  # type: ignore
+            raise FileNotFoundError("Denied users file is not found!")
 
     logging.info("Starting scrape commands with args:")
     args = locals()
@@ -84,8 +83,7 @@ def model_test(
     denied_users: Optional[str] = typer.Option(
         (main_dir / "data" / "denied-users.json").relative_to(main_dir).as_posix(),
         help=(
-            "List user yang tweetnya diabaikan [pathlike string ke file list user "
-            + '(json formated) atau Sequance separated by ","]'
+            "List user yang tweetnya diabaikan [pathlike string ke file list user (json formated)]"
         ),
     ),
     verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
@@ -93,7 +91,7 @@ def model_test(
     add_features = add_features.split(",") if add_features else []  # type: ignore
     if denied_users:
         if not Path(denied_users).exists():
-            denied_users = denied_users.split(",")  # type: ignore
+            raise FileNotFoundError("Denied users file is not found!")
 
     logging.info("Starting scrape commands with args:")
     args = locals()

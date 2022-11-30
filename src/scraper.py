@@ -6,7 +6,7 @@ import json
 import logging
 from pathlib import Path
 from subprocess import PIPE, Popen
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.utils import datetime_validator, get_name, kill_proc_tree
 
@@ -38,8 +38,8 @@ class TwitterScraper:
         ...
     """
 
-    crawler = "snscrape"
-    scraper = "twitter-search"
+    scraper = "snscrape"
+    scraper_type = "twitter-search"
 
     def __init__(
         self,
@@ -78,7 +78,7 @@ class TwitterScraper:
             scrapper_options.append(f"until:{self.until}")
         new_scrapper_options = " ".join(scrapper_options)
 
-        return f'{self.crawler} {new_global_options} {self.scraper} "{new_scrapper_options}"'
+        return f'{self.scraper} {new_global_options} {self.scraper_type} "{new_scrapper_options}"'
 
     def _flatten(
         self, nested_d: Dict[str, Any], parent_key: str = "", sep: str = "."
@@ -102,22 +102,17 @@ class TwitterScraper:
                 items.append((new_key, v))
         return dict(items)
 
-    def _denied_users_handler(self, denied_users: Union[Sequence[str], str]) -> Sequence[str]:
+    def _denied_users_handler(self, denied_users: str) -> Sequence[str]:
         """Handle denied users."""
-        if type(denied_users) == str:
-            assert Path(denied_users).exists(), "File not exist!!"
-            with open(denied_users) as reader:
-                users = json.load(reader)  # type: Sequence[str]
-            return users
-        elif isinstance(denied_users, Sequence):
-            return denied_users
-        else:  # pragma: no cover
-            raise TypeError("Expected pathlike string or Sequence on denied_users!")
+        assert Path(denied_users).exists(), "File not exist!!"
+        with open(denied_users) as reader:
+            users = json.load(reader)  # type: Sequence[str]
+        return users
 
     def scrape(
         self,
         add_features: Sequence[str] = [],
-        denied_users: Optional[Union[str, Sequence[str]]] = None,
+        denied_users: Optional[str] = None,
         max_result: Optional[int] = None,
         export: Optional[str] = None,
         verbose: bool = True,
@@ -127,7 +122,7 @@ class TwitterScraper:
         Args:
             add_features (Sequence[str]): Menambahkan filter kolom yang akan diexport.
                 Defaults to [].
-            denied_users (Optional[Union[str, Sequence[str]]]): List user yang tweetnya dapat
+            denied_users (Optional[str]): List user yang tweetnya dapat
                 dihiraukan. Dapat berupa pathlike string ke file tempat list user disimpan
                 (json format) atau berupa sequence. Defaults to None.
             max_result (Optional[int]): Jumlah maksimal tweet yang di scrape. Defaults to None.
@@ -138,7 +133,7 @@ class TwitterScraper:
         command = self._get_command()
         filters = ["date", "url", "user.username", *add_features, "content"]
         if denied_users is not None:
-            denied_users = self._denied_users_handler(denied_users)
+            denied_users = self._denied_users_handler(denied_users)  # type: ignore
 
         if export is not None:
             logging.info(f"Exporting to 'output' directory")
@@ -159,7 +154,7 @@ class TwitterScraper:
                 temp = self._flatten(json.loads(out))
 
                 if denied_users is not None:  # filter username
-                    if temp["user.username"] in denied_users:
+                    if temp["user.username"] in denied_users:  # pragma: no cover
                         continue
 
                 if verbose:  # logging output
