@@ -23,12 +23,12 @@ class TwitterScraper:
     Args:
         query (str): Search query.
         lang (str): Language. Defaults to "id".
+        geocode (Optional[str]): Geocode [lat,long,r]. Defaults to None.
         since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
         until (Optional[str]): Until [string isoformated datetime]. Defaults to None.
 
     Examples:
         Scraping spesifik topik
-
         >>> scraper = TwitterScraper(query="minyak")
         >>> scraper.scrape()
         [ INFO ] Scraping...
@@ -45,11 +45,13 @@ class TwitterScraper:
         self,
         query: str,
         lang: str = "id",
+        geocode: Optional[str] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
     ) -> None:
         self.query = query
         self.lang = lang
+        self.geocode = geocode
         if since:
             datetime_validator(since)
         self.since = since
@@ -74,6 +76,8 @@ class TwitterScraper:
             "exclude:nativeretweets",
             "exclude:retweets",
         ]
+        if self.geocode:
+            scrapper_options.append(f"geocode:{self.geocode}")
         if self.until:
             scrapper_options.append(f"until:{self.until}")
         new_scrapper_options = " ".join(scrapper_options)
@@ -111,7 +115,7 @@ class TwitterScraper:
 
     def scrape(
         self,
-        add_features: Sequence[str] = [],
+        add_features: Dict[str, str] = {},
         denied_users: Optional[str] = None,
         max_result: Optional[int] = None,
         export: Optional[str] = None,
@@ -120,18 +124,23 @@ class TwitterScraper:
         """Running scraping dengan `snscrape`
 
         Args:
-            add_features (Sequence[str]): Menambahkan filter kolom yang akan diexport.
-                Defaults to [].
-            denied_users (Optional[str]): List user yang tweetnya dapat
-                dihiraukan. Dapat berupa pathlike string ke file tempat list user disimpan
-                (json format) atau berupa sequence. Defaults to None.
+            add_features (Dict[str, str]): Menambahkan filter kolom yang akan diexport.
+                Defaults to {}.
+            denied_users (Optional[str]): List user yang tweetnya dapat dihiraukan, berupa
+                pathlike string ke file tempat list user disimpan (json format). Defaults to None.
             max_result (Optional[int]): Jumlah maksimal tweet yang di scrape. Defaults to None.
             export (Optional[str]): Nama file tempat table diexport pada direktori `output`.
                 Jika `None` maka table hasil scraping tidak akan diexport. Defaults to None.
             verbose (bool): Tampilkan tweet yang di scrape di terminal. Defaults to True.
         """
         command = self._get_command()
-        filters = ["date", "url", "user.username", *add_features, "content"]
+        filters = {
+            "date": "date",
+            "url": "url",
+            "username": "user.username",
+            **add_features,
+            "content": "content",
+        }
         if denied_users is not None:
             denied_users = self._denied_users_handler(denied_users)  # type: ignore
 
@@ -142,7 +151,7 @@ class TwitterScraper:
             filename = get_name((path / f"scrape-{export}.csv").as_posix())
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
-            writer.writerow(filters)
+            writer.writerow(list(filters.keys()))
 
         logging.info("Scraping...")
         snscrape = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
@@ -166,7 +175,7 @@ class TwitterScraper:
                     print(f"{index} - {temp['date']} - {temp['user.username']} - {content}")
 
                 if export:  # write row
-                    row = [temp[x] for x in filters]
+                    row = [temp[x] for x in filters.values()]
                     writer.writerow(row)
 
                 if max_result:  # brake and kill subprocess
@@ -174,6 +183,9 @@ class TwitterScraper:
                         kill_proc_tree(snscrape.pid)
                         break
                 index += 1
+        except KeyError as e:  # pragma: no cover
+            kill_proc_tree(snscrape.pid)
+            raise e
         except KeyboardInterrupt:  # pragma: no cover
             logging.info("Received exit from user, exiting...")
             kill_proc_tree(snscrape.pid)

@@ -3,7 +3,7 @@ import json
 import logging
 from pathlib import Path
 from subprocess import PIPE, Popen
-from typing import Optional, Sequence
+from typing import Dict, Optional
 
 from src.model import Model
 from src.preprocessing import preprocessing
@@ -22,8 +22,9 @@ class ModelScraper(TwitterScraper):
 
     Args:
         model (str): Model path.
-        query (str): Search query. Defaults to "vaksin (corona OR covid)".
+        query (str): Search query. Defaults to "#corona OR covid OR Covid19 OR #DiRumahAja OR #quarantine OR Corona OR DiRumahAja OR wabah OR pandemi OR quarantine".
         lang (str): Language. Defaults to "id".
+        geocode (Optional[str]): Geocode [lat,long,r]. Defaults to "-6.213621,106.832673,20km" which is Jakarta geocode.
         since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
         until (Optional[str]): Until [string isoformated datetime]. Defaults to None.
     """
@@ -33,15 +34,16 @@ class ModelScraper(TwitterScraper):
         model: str,
         query: str = "vaksin (corona OR covid)",
         lang: str = "id",
+        geocode: Optional[str] = None,
         since: Optional[str] = None,
         until: Optional[str] = None,
     ) -> None:
-        super().__init__(query, lang, since, until)
+        super().__init__(query, lang, geocode, since, until)
         self.model = Model(model)
 
     def scrape(
         self,
-        add_features: Sequence[str] = [],
+        add_features: Dict[str, str] = {},
         denied_users: Optional[str] = None,
         max_result: Optional[int] = None,
         export: Optional[str] = None,
@@ -50,18 +52,23 @@ class ModelScraper(TwitterScraper):
         """Running scraping dengan `snscrape`
 
         Args:
-            add_features (Sequence[str]): Menambahkan filter kolom yang akan diexport.
-                Defaults to [].
-            denied_users (Optional[str]): List user yang tweetnya dapat
-                dihiraukan. Dapat berupa pathlike string ke file tempat list user disimpan
-                (json format) atau berupa sequence. Defaults to None.
+            add_features (Dict[str, str]): Menambahkan filter kolom yang akan diexport.
+                Defaults to {}.
+            denied_users (Optional[str]): List user yang tweetnya dapat dihiraukan, berupa
+                pathlike string ke file tempat list user disimpan (json format). Defaults to None.
             max_result (Optional[int]): Jumlah maksimal tweet yang di scrape. Defaults to None.
             export (Optional[str]): Nama file tempat table diexport pada direktori `output`.
                 Jika `None` maka table hasil scraping tidak akan diexport. Defaults to None.
             verbose (bool): Tampilkan tweet yang di scrape di terminal. Defaults to True.
         """
         command = self._get_command()
-        filters = ["date", "url", "user.username", *add_features, "content"]
+        filters = {
+            "date": "date",
+            "url": "url",
+            "username": "user.username",
+            **add_features,
+            "content": "content",
+        }
         if denied_users is not None:
             denied_users = self._denied_users_handler(denied_users)  # type: ignore
 
@@ -69,10 +76,10 @@ class ModelScraper(TwitterScraper):
             logging.info(f"Exporting to 'output' directory")
             path = main_dir / "output"
             path.mkdir(exist_ok=True)
-            filename = get_name((path / f"scrape-{export}.csv").relative_to(main_dir).as_posix())
+            filename = get_name((path / f"scrape-{export}.csv").as_posix())
             f = open(filename, "w", encoding="utf-8")
             writer = csv.writer(f)
-            writer.writerow(filters + ["p_emotions"])
+            writer.writerow(list(filters.keys()) + ["p_emotions"])
 
         logging.info("Scraping...")
         snscrape = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
@@ -101,7 +108,7 @@ class ModelScraper(TwitterScraper):
                     )
 
                 if export:  # write row
-                    row = [temp[x] for x in filters] + [prediction[0][0]]
+                    row = [temp[x] for x in filters.values()] + [prediction[0][0]]
                     writer.writerow(row)
 
                 if max_result:  # brake and kill subprocess
@@ -109,6 +116,9 @@ class ModelScraper(TwitterScraper):
                         kill_proc_tree(snscrape.pid)
                         break
                 index += 1
+        except KeyError as e:  # pragma: no cover
+            kill_proc_tree(snscrape.pid)
+            raise e
         except KeyboardInterrupt:  # pragma: no cover
             logging.info("Received exit from user, exiting...")
             kill_proc_tree(snscrape.pid)

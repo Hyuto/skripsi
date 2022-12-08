@@ -11,8 +11,13 @@ def test_ModelScraper():
     model_path = main_dir / "models" / "model.onnx"
 
     # test max_result
-    ModelScraper(model_path.relative_to(main_dir).as_posix(), "vaksin covid").scrape(
-        export="vaksin_covid", max_result=10, denied_users=main_dir / "data" / "denied-users.json"
+    ModelScraper(
+        model_path.relative_to(main_dir).as_posix(),
+        geocode="-6.213621,106.832673,20km",
+    ).scrape(
+        export="vaksin_covid",
+        max_result=10,
+        denied_users=main_dir / "data" / "denied-users.json",
     )
     filename = output_dir / "scrape-vaksin_covid.csv"
     dataset = pd.read_csv(filename.as_posix())

@@ -1,3 +1,4 @@
+import ast
 import logging
 import re
 import shutil
@@ -39,7 +40,7 @@ def scrape(
     ),
     verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
 ) -> None:
-    add_features = add_features.split(",") if add_features else []  # type: ignore
+    add_features = ast.literal_eval(add_features) if add_features else {}  # type: ignore
     if denied_users:
         if not Path(denied_users).exists():
             raise FileNotFoundError("Denied users file is not found!")
@@ -51,7 +52,7 @@ def scrape(
 
     from src.scraper import TwitterScraper
 
-    scraper = TwitterScraper(query, lang, since, until)
+    scraper = TwitterScraper(query=query, lang=lang, since=since, until=until)
     scraper.scrape(
         export=export,
         add_features=add_features,  # type: ignore
@@ -88,7 +89,7 @@ def model_test(
     ),
     verbose: bool = typer.Option(True, help="Logging setiap tweet yang discrape"),
 ) -> None:
-    add_features = add_features.split(",") if add_features else []  # type: ignore
+    add_features = ast.literal_eval(add_features) if add_features else {}  # type: ignore
     if denied_users:
         if not Path(denied_users).exists():
             raise FileNotFoundError("Denied users file is not found!")
@@ -100,7 +101,7 @@ def model_test(
 
     from src.model_tester import ModelScraper
 
-    scraper = ModelScraper(model, query, lang, since, until)
+    scraper = ModelScraper(model=model, query=query, lang=lang, since=since, until=until)
     scraper.scrape(
         export=export,
         add_features=add_features,  # type: ignore
