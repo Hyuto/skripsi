@@ -26,7 +26,7 @@ class ModelScraper(TwitterScraper):
 
     Args:
         model (str): Model path.
-        query (str): Search query. Defaults to "#corona OR covid OR Covid19 OR #DiRumahAja OR #quarantine OR Corona OR DiRumahAja OR wabah OR pandemi OR quarantine".
+        query (str): Search query. Defaults to "vaksin (corona OR covid)".
         lang (str): Language. Defaults to "id".
         geocode (Optional[str]): Geocode [lat,long,r]. Defaults to "-6.213621,106.832673,20km" which is Jakarta geocode.
         since (Optional[str]): Since [string isoformated datetime]. Defaults to None.
@@ -70,7 +70,7 @@ class ModelScraper(TwitterScraper):
         filters = {
             "date": "date",
             "url": "url",
-            "username": "user.username",
+            "user": "user.username",
             **add_features,
             "content": "content",
         }

@@ -141,7 +141,7 @@ class TwitterScraper:
         filters = {
             "date": "date",
             "url": "url",
-            "username": "user.username",
+            "user": "user.username",
             **add_features,
             "content": "content",
         }
