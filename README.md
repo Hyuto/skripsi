@@ -1,4 +1,4 @@
-# Project Skripsi
+# Analisis Emosi Terhadap Opini Masyarakat Tentang Vaksin Covid-19 Pada Sosial Media Twitter Menggunakan Support Vector Machine
 
 ![love](https://img.shields.io/badge/Made%20with-🖤-white)
 [![Python](https://img.shields.io/badge/Python-≥3.8-green?logo=python)](https://www.python.org/)
@@ -7,14 +7,8 @@
 [![codecov](https://codecov.io/gh/Hyuto/skripsi/branch/master/graph/badge.svg?token=6L0ICORI22)](https://codecov.io/gh/Hyuto/skripsi)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Main repository untuk project skripsi.
-
-## To Do's
-
-1. Labelling data
-2. Preprocess & Visualisasi (TSNE visualization on corpus)
-   - liat apakah _linearly separable_
-3. Modelling dengan SVM (setiap kernel)
+Main repository untuk project skripsi berjudul
+`Analisis Emosi Terhadap Opini Masyarakat Tentang Vaksin Covid-19 Pada Sosial Media Twitter Menggunakan Support Vector Machine`.
 
 ## Setup
 
