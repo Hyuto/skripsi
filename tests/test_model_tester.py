@@ -8,7 +8,7 @@ main_dir = Path(__file__).parents[1]
 
 def test_ModelScraper():
     output_dir = main_dir / "output"
-    model_path = main_dir / "models" / "model.onnx"
+    model_path = main_dir / "models" / "model-svm-linear-medium.onnx"
 
     # test max_result
     ModelScraper(

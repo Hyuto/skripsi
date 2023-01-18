@@ -68,7 +68,7 @@ def scrape(
 def model_test(
     query: str = typer.Argument("vaksin (corona OR covid)", help="Query pencarian tweet"),
     model: str = typer.Argument(
-        (main_dir / "models" / "model.onnx").relative_to(main_dir).as_posix(),
+        (main_dir / "models" / "model-svm-linear-large.onnx").relative_to(main_dir).as_posix(),
         help="Path model yang digunakan",
     ),
     lang: str = typer.Option("id", help="Bahasa"),

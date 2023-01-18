@@ -7,7 +7,7 @@ main_dir = Path(__file__).parents[1]
 
 
 def test_predict():
-    model = Model((main_dir / "models" / "model.onnx").as_posix())
+    model = Model((main_dir / "models" / "model-svm-linear-medium.onnx").as_posix())
 
     assert model.predict("test")
     assert model.predict(["test"])
