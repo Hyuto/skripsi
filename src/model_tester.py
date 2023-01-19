@@ -72,7 +72,7 @@ class ModelScraper(TwitterScraper):
             "url": "url",
             "user": "user.username",
             **add_features,
-            "content": "content",
+            "content": "rawContent",
         }
         if denied_users is not None:
             denied_users = self._denied_users_handler(denied_users)  # type: ignore
@@ -107,7 +107,7 @@ class ModelScraper(TwitterScraper):
                         if temp["user.username"] in denied_users:  # pragma: no cover
                             continue
 
-                    class_pred, _ = self.model.predict(preprocessing(temp["content"]))
+                    class_pred, _ = self.model.predict(preprocessing(temp["rawContent"]))
 
                     if verbose:  # pragma: no cover
                         # logging output
@@ -130,7 +130,7 @@ class ModelScraper(TwitterScraper):
                             f"{index}",
                             temp["date"],
                             temp["user.username"],
-                            temp["content"],
+                            temp["rawContent"],
                             f"{color}{emotion}",
                         )
                         live.update(table)

@@ -16,7 +16,6 @@ pandas = '^1.4.3'
 matplotlib = '^3.5.2'
 seaborn = '^0.11.2'
 scikit-learn = '^1.1.1'
-snscrape = '^0.4.3'
 PySastrawi = '^1.2.0'
 typer = { extras = ["all"], version = "^0.6.1" }
 psutil = "^5.9.2"
@@ -27,6 +26,7 @@ onnxruntime = "1.12.1"
 jupyter = { version = "^1.0.0", optional = true }
 tqdm = "^4.64.1"
 streamlit = "^1.17.0"
+snscrape = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 isort = '^5.10.1'

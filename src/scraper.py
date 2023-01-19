@@ -143,7 +143,7 @@ class TwitterScraper:
             "url": "url",
             "user": "user.username",
             **add_features,
-            "content": "content",
+            "content": "rawContent",
         }
         if denied_users is not None:
             denied_users = self._denied_users_handler(denied_users)  # type: ignore
@@ -179,7 +179,7 @@ class TwitterScraper:
 
                     if verbose:  # logging output
                         table.add_row(
-                            f"{index}", temp["date"], temp["user.username"], temp["content"]
+                            f"{index}", temp["date"], temp["user.username"], temp["rawContent"]
                         )
                         live.update(table)
 

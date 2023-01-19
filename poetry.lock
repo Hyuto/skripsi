@@ -909,7 +909,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "lxml"
-version = "4.9.1"
+version = "4.9.2"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
 category = "main"
 optional = false
@@ -1868,7 +1868,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "snscrape"
-version = "0.4.3.20220106"
+version = "0.5.0.20230113"
 description = "A social networking service scraper"
 category = "main"
 optional = false
@@ -1880,9 +1880,6 @@ filelock = "*"
 lxml = "*"
 pytz = {version = "*", markers = "python_version < \"3.9.0\""}
 requests = {version = "*", extras = ["socks"]}
-
-[package.extras]
-test = ["coverage"]
 
 [[package]]
 name = "soupsieve"
@@ -2252,7 +2249,7 @@ jupyter = ["jupyter"]
 [metadata]
 lock-version = "1.1"
 python-versions = '>=3.8,<3.9.7 || >3.9.7,<4.0'
-content-hash = "14b70f8e49fa4101472147eeaa9ec259e67b916980111c74f2758e3fd7a5eeab"
+content-hash = "154baaaf913f85943bbd8f7305313e0df671b446e26034fd6fd98059c8c4d138"
 
 [metadata.files]
 altair = []
