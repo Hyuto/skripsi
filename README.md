@@ -27,7 +27,7 @@ di `android` dan `web` dengan menggunakan `react-native` dan `onnxruntime`.
 
 ## [Dataset](./data)
 
-Dataset adalah data hasil web scraping twitter pada topik `vaksin covid-19` pada tahun 2021 selama
+Dataset yang digunakan adalah data hasil web scraping twitter pada topik `vaksin covid-19` pada tahun 2021 selama
 12 bulan. Library yang digunakan untuk melakukan scraping adalah [`snscrape`](https://github.com/JustAnotherArchivist/snscrape)
 dengan query yang digunakan untuk pencarian adalah `vaksin (covid OR corona)`. Data dapat diakses
 langsung secara online dengan format link berikut:
