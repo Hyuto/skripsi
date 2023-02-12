@@ -27,6 +27,7 @@ jupyter = { version = "^1.0.0", optional = true }
 tqdm = "^4.64.1"
 streamlit = "^1.17.0"
 snscrape = "^0.5.0"
+plotly = "^5.13.0"
 
 [tool.poetry.dev-dependencies]
 isort = '^5.10.1'
